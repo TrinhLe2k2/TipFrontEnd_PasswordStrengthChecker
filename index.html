@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Strength Checker</title>
+    <style>
+        *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Raleway', sans-serif;
+        }
+        .container {
+            transform: translateY(-50%);
+            position: relative;
+            width: 400px;
+            padding: 30px;
+            background: #333;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            gap: 10px;
+            padding-bottom: 70px;
+            -webkit-box-reflect: below 1px linear-gradient(transparent, transparent, #0005);
+        }
+
+        .container .inputBox {
+            position: relative;
+            width: 100%;
+        }
+
+        .container .inputBox input {
+            position: relative;
+            width: 100%;
+            background: #222;
+            border: none;
+            outline: none;
+            padding: 10px;
+            color: #fff;
+            font-size: 1.1rem;
+        }
+
+        .container .strengthMeter {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #222;
+        }
+
+        .container .strengthMeter::before {
+            position: absolute;
+            top: -45px;
+            left: 30px;
+            transition: 0.5s;
+        }
+
+        .container.weak .strengthMeter::before {
+            content: 'Your password is weak';
+            color: #f00;
+            filter: drop-shadow(0 0 5px #f00);
+        }
+
+        .container.medium .strengthMeter::before {
+            content: 'Your password is medium';
+            color: #ffa500;
+            filter: drop-shadow(0 0 5px #ffa500);
+        }
+
+        .container.strong .strengthMeter::before {
+            content: 'Your password is strong';
+            color: #0f0;
+            filter: drop-shadow(0 0 5px #0f0);
+        }
+
+        .container .strengthMeter::after {
+            content: '';
+            position: absolute;
+            height: 100%;
+            transition: 0.5s;
+        }
+
+        .container.weak .strengthMeter::after {
+            width: 10%;
+            background-color: #f00;
+            filter: drop-shadow(0 0 5px #f00) drop-shadow(0 0 10px #f00) drop-shadow(0 0 20px #f00);
+        }
+
+        .container.medium .strengthMeter::after {
+            width: 66.66%;
+            background-color: #ffa500;
+            filter: drop-shadow(0 0 5px #ffa500) drop-shadow(0 0 10px #ffa500) drop-shadow(0 0 20px #ffa500);
+        }
+
+        .container.strong .strengthMeter::after {
+            width: 100%;
+            background-color: #0f0;
+            filter: drop-shadow(0 0 5px #0f0) drop-shadow(0 0 10px #0f0) drop-shadow(0 0 20px #0f0);
+        }
+
+        .show {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 60px;
+            background-color: #333;
+            border: 6px solid #222;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.6em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            user-select: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Password Strength Checker</h2>
+        <div class="inputBox">
+            <input type="password" placeholder="Password" id="myPassword">
+            <div class="show">Show</div>
+        </div>
+        <div class="strengthMeter"></div>
+    </div>
+
+    <script>
+        var pswrd = document.getElementById('myPassword');
+        var show = document.querySelector('.show');
+        show.onclick = function() {
+            if(pswrd.type === 'password') {
+                pswrd.setAttribute('type', 'text');
+                show.textContent = 'Hide';
+            } else {
+                pswrd.setAttribute('type', 'password');
+                show.textContent = 'Show';
+            }
+        }
+
+        function Strength(password) {
+            // Define the rules for password strength
+            const regexLowercase = /[a-z]/;
+            const regexUppercase = /[A-Z]/;
+            const regexDigit = /\d/;
+            const regexSpecialChar = /[!@#$%^&*(),.?":{}|<>]/;
+
+            let i = 0;
+            // Check lowercase, uppercase, digit, and special character
+            if (regexLowercase.test(password)) i++;
+            if (regexUppercase.test(password)) i++;
+            if (regexDigit.test(password)) i++;
+            if (regexSpecialChar.test(password)) i++;
+            // Check length
+            if (password.length >= 8) i++;
+            return i;
+        }
+        let container = document.querySelector('.container');
+        pswrd.addEventListener('keyup', function(event) {
+            let strength = Strength(this.value)
+            if(strength <= 2) {
+                container.classList.add('weak');
+                container.classList.remove('medium');
+                container.classList.remove('strong');
+            } else if (strength > 2 && strength <= 4) {
+                container.classList.remove('weak');
+                container.classList.add('medium');
+                container.classList.remove('strong');
+            } else {
+                container.classList.remove('weak');
+                container.classList.remove('medium');
+                container.classList.add('strong');
+            }
+        });
+        
+    </script>
+</body>
+</html>
