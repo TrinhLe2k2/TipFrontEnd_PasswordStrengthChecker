@@ -127,14 +127,32 @@
             user-select: none;
         }
 
+        .roles ul {
+            padding: 0 30px;
+        }
+
+        .roles ul li {
+            transition: 1s;
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
         <h2>Password Strength Checker</h2>
         <div class="inputBox">
-            <input type="password" placeholder="Password" id="myPassword">
+            <input type="password" placeholder="Password" id="myPassword" pattern="^[^\p{L}]+$">
             <div class="show">Show</div>
+        </div>
+        <!-- Define the rules for password strength -->
+        <div class="roles">
+            <ul>
+                <li id="Role_Lowercase">Lowercase</li>
+                <li id="Role_Uppercase">Uppercase</li>
+                <li id="Role_Digit">Digit</li>
+                <li id="Role_SpecialCharacter">Special character</li>
+                <li id="Role_EightCharacters">8 characters</li>
+            </ul>
         </div>
         <div class="strengthMeter"></div>
     </div>
@@ -161,12 +179,37 @@
 
             let i = 0;
             // Check lowercase, uppercase, digit, and special character
-            if (regexLowercase.test(password)) i++;
-            if (regexUppercase.test(password)) i++;
-            if (regexDigit.test(password)) i++;
-            if (regexSpecialChar.test(password)) i++;
+            if (regexLowercase.test(password)){
+                i++;
+                document.getElementById('Role_Lowercase').style.color = '#0f0'
+            } else {
+                document.getElementById('Role_Lowercase').style.color = ''
+            }
+            if (regexUppercase.test(password)) {
+                i++;
+                document.getElementById('Role_Uppercase').style.color = '#0f0'
+            } else {
+                document.getElementById('Role_Uppercase').style.color = ''
+            }
+            if (regexDigit.test(password)) {
+                i++;
+                document.getElementById('Role_Digit').style.color = '#0f0'
+            } else {
+                document.getElementById('Role_Digit').style.color = ''
+            }
+            if (regexSpecialChar.test(password)) {
+                i++;
+                document.getElementById('Role_SpecialCharacter').style.color = '#0f0'
+            } else {
+                document.getElementById('Role_SpecialCharacter').style.color = ''
+            }
             // Check length
-            if (password.length >= 8) i++;
+            if (password.length >= 8) {
+                i++;
+                document.getElementById('Role_EightCharacters').style.color = '#0f0'
+            } else {
+                document.getElementById('Role_EightCharacters').style.color = ''
+            }
             return i;
         }
         let container = document.querySelector('.container');
